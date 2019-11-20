@@ -1,0 +1,37 @@
+ID: businessruleseditor
+_schema-version: '2.1'
+parameters:
+   deploy_mode: html5-repo
+version: 0.0.1
+
+modules:
+ - name: businessruleseditor_appRouter
+   type: approuter.nodejs
+   path: businessruleseditor_appRouter
+   parameters:
+      disk-quota: 256M
+      memory: 256M
+   requires:
+    - name: businessruleseditor_html5_repo_runtime
+    - name: businessrules_uaa 
+    - name: businessrules
+resources:
+ - name: businessruleseditor_html5_repo_runtime
+   parameters:
+      service-plan: app-runtime
+      service: html5-apps-repo
+   type: org.cloudfoundry.managed-service
+ - name: businessrules
+   type: org.cloudfoundry.existing-service
+ - name: businessrules_uaa
+   type: com.sap.xs.uaa
+   parameters:
+      config:
+         xsappname: businessrules_uaa-appname
+         tenant-mode: dedicated
+         role-templates:
+            - name : UaaUser
+              description: Role template for accessing SAP Business Rule APIs.Editor via user token flow
+              scope-references:
+                - uaa.user
+       
